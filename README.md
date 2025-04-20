@@ -30,7 +30,11 @@ Start the Frontend
 ```bash
   npm run start
 ```
+Start the Backend
 
+```bash
+  npm indext.js
+```
 #----------------------------------------------------------------------------------
 ## env
 env FrontEnd
