@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Center,
   Divider,
@@ -13,30 +12,34 @@ import { UserAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { signInWithGoogle, signInWithEmail, currentUser } = UserAuth();
+  const { currentUser, setCurrentUser } = UserAuth();
+  const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
 
-  const handleLoginWithEmail = async () => {
-    setLoading(true);
-    try {
-      await signInWithEmail(email, password);
-      toast({ title: "Login successful", status: "success", position: "top" });
-    } catch (err) {
-      toast({
-        title: "Login failed",
-        description: err.message,
-        status: "error",
-        position: "top",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+const handleLoginWithUsername = async () => {
+  setLoading(true);
+  try {
+    const res = await fetch("http://localhost:5000/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+
+    setCurrentUser(data); // Simpan user ke context
+    toast({ title: "Login successful", status: "success" });
+  } catch (err) {
+    toast({ title: "Login failed", description: err.message, status: "error" });
+  } finally {
+    setLoading(false);
+  }
+};
+  
 
   const handleSignInWithGoogle = () => {
     window.location.href = "http://localhost:5000/auth/google";
@@ -55,8 +58,8 @@ function Login() {
         <Input
           color="black"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <Input
           color="black"
@@ -67,7 +70,7 @@ function Login() {
         />
         <Button
           isLoading={loading}
-          onClick={handleLoginWithEmail}
+          onClick={handleLoginWithUsername}
           colorScheme="teal"
         >
           Login
