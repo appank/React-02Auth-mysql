@@ -48,9 +48,9 @@ const Topbar = ({ user, onOpenSidebar, onLogout }) => {
       {/* Right: User Info */}
       <Flex align="center" gap={{ base: 2, md: 3 }}>
         {!isMobile && (
-          <Text color="gray.600">{user?.displayName || "User"}</Text>
+          <Text color="gray.600">{user?.displayName || user?.nama_lengkap || "User"}</Text>
         )}
-        <Avatar size="sm" name={user?.displayName} src={user?.photoURL}/>
+        <Avatar size="sm" name={user?.displayName} src={user?.photo || user?.photoURL}/>
         <Button
           colorScheme="red"
           size="sm"
